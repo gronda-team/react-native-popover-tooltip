@@ -178,7 +178,7 @@ class PopoverTooltip extends React.Component {
                     })}
                   </View>
                   {this.state.tooltip_triangle_down
-                  ? <View style={[styles.triangle_down, {marginLeft:this.state.tooltip_triangle_left_margin}, this.props.labelContainerStyle? {borderTopColor: this.props.labelContainerStyle.backgroundColor} : null]} />
+                  ? <View style={[styles.triangle_down, {marginLeft:this.state.tooltip_triangle_left_margin}, this.props.labelContainerStyle? {borderTopColor: "#00966E"} : null]} />
                   : null
                   }
                 </View>
