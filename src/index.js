@@ -23,6 +23,7 @@ class PopoverTooltip extends React.Component {
 
     this.state = {
       isModalOpen: false,
+      pressable: false,
       x: 0,
       y: 0,
       width: 0,
@@ -38,6 +39,7 @@ class PopoverTooltip extends React.Component {
     this.toggleModal = this.toggleModal.bind(this);
     this.openModal = this.openModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
+    this.delayBackgroundPressable = this.delayBackgroundPressable.bind(this);
   }
 
   componentWillMount() {
@@ -45,6 +47,20 @@ class PopoverTooltip extends React.Component {
       inputRange: [0, 1],
       outputRange: [1, 0]
     })});
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    //when the tooltip is visible, add 3-4secs delay, so they can only close it when it they click on it
+    if(!prevState.isModalOpen && this.state.isModalOpen){
+      setTimeout(() => {
+        this.setState({ pressable: true });
+      }, 3000)
+    }
+
+    //make it false again, cause it doesnt unmount for example if you go to a story
+    if(prevState.isModalOpen && !this.state.isModalOpen){
+      this.setState({ pressable: false });
+    }
   }
 
   toggleModal() {
@@ -62,6 +78,13 @@ class PopoverTooltip extends React.Component {
     this.setState({will_popup: false});
     this._showZoomingOutAnimation();
     this.props.onCloseTooltipMenu && this.props.onCloseTooltipMenu();
+  }
+
+  delayBackgroundPressable(){
+    // so we can delay the pressability
+    if(this.state.pressable){
+      this.toggle();
+    }
   }
 
   handleClick(onClickItem) {
@@ -82,7 +105,7 @@ class PopoverTooltip extends React.Component {
     } = this.props;
     const { onRequestClose } = this.props;
     const leftMargin = this.props.middle ? 2 : 60;
-
+    console.log(this.state.isModalOpen);
     return (
       <TouchableOpacity
         ref={component => this._component_wrapper = component}
@@ -104,7 +127,7 @@ class PopoverTooltip extends React.Component {
             <TouchableOpacity
               activeOpacity={1}
               focusedOpacity={1} style={{ flex: 1 }}
-              onPress={this.toggle.bind(this)}
+              onPress={this.delayBackgroundPressable}
             >
               <Animated.View
                 style={[
