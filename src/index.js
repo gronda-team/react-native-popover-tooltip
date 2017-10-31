@@ -52,13 +52,14 @@ class PopoverTooltip extends React.Component {
   componentDidUpdate(prevProps, prevState){
     //when the tooltip is visible, add 3-4secs delay, so they can only close it when it they click on it
     if(!prevState.isModalOpen && this.state.isModalOpen){
-      setTimeout(() => {
+      this.timer = setTimeout(() => {
         this.setState({ pressable: true });
       }, 3000)
     }
 
     //make it false again, cause it doesnt unmount for example if you go to a story
     if(prevState.isModalOpen && !this.state.isModalOpen){
+      clearTimeout(this.timer);
       this.setState({ pressable: false });
     }
   }
